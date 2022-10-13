@@ -20,9 +20,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String url = 'https://jsonplaceholder.typicode.com/posts';
+  Future getUsers() async {
+    String url = 'https://jsonplaceholder.typicode.com/users';
 
-  Future getPosts() async {
     var response = await http.get(Uri.parse(url));
 
     var responseBody = jsonDecode(response.body);
@@ -30,121 +30,158 @@ class _HomePageState extends State<HomePage> {
     return responseBody;
   }
 
-  Future addPost() async {
-    String url = 'https://jsonplaceholder.typicode.com/posts';
+  Future addUser() async {
+    String url = 'https://jsonplaceholder.typicode.com/users';
 
-    var response = await http.post(
-      Uri.parse(url),
-      body: {
-        'id': '1',
-        'userId': '10',
-        'title': 'Hello world to API :)',
-      },
-    );
+    var response = await http.post(Uri.parse(url), body: {
+      "id": "11",
+      "name": "Mohamed Gamal",
+      "username": "Mohamed-G15",
+    });
 
     var responseBody = jsonDecode(response.body);
 
     print(responseBody);
-
-    return responseBody;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Posts API'),
-          centerTitle: true,
-        ),
-        body: FutureBuilder(
-          future: getPosts(),
+      appBar: AppBar(
+        title: const Text('Handling API'),
+        centerTitle: true,
+      ),
+      body: FutureBuilder(
+          future: getUsers(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.separated(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                physics: const BouncingScrollPhysics(),
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) => SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
-                  itemBuilder: ((context, index) => InkWell(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                if (snapshot.hasData) {
-                                  return SimpleDialog(
-                                    title: RichText(
-                                      text: TextSpan(
-                                          text:
-                                              'Post ${snapshot.data[index]['id']} ',
-                                          style: const TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black),
-                                          children: [
-                                            TextSpan(
-                                                text:
-                                                    'by user ${snapshot.data[index]['userId']}',
-                                                style: const TextStyle(
-                                                    fontStyle:
-                                                        FontStyle.italic))
-                                          ]),
-                                    ),
-                                    contentPadding: const EdgeInsets.all(20),
-                                    children: [
-                                      Text(
-                                        '${snapshot.data[index]['body']}',
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("Close"))
-                                    ],
-                                  );
-                                }
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.lightBlue,
-                              borderRadius: BorderRadius.circular(10)),
-                          margin: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: RichText(
-                              text: TextSpan(
-                                  text:
-                                      'user${snapshot.data[index]['userId']}:',
-                                  style: const TextStyle(
-                                      color: Colors.white70, fontSize: 23),
-                                  children: [
-                                    TextSpan(
-                                      text: ' ${snapshot.data[index]['title']}',
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 25),
-                                    )
-                                  ]),
-                            ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.lightBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    '${snapshot.data[index]['id']}',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      )),
-                  separatorBuilder: ((context, index) => const SizedBox(
-                        height: 10,
-                      )),
-                  itemCount: snapshot.data.length);
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.lightBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    '${snapshot.data[index]['name']}',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.lightBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    '${snapshot.data[index]['username']}',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.lightBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    '${snapshot.data[index]['email']}',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.lightBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    '${snapshot.data[index]['website']}',
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
+                ),
+              );
             }
             return const Center(
               child: CircularProgressIndicator(),
             );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            addPost();
-          },
-          backgroundColor: Colors.blueGrey,
-          child: const Icon(Icons.add),
-        ));
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          addUser();
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
