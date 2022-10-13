@@ -30,6 +30,25 @@ class _HomePageState extends State<HomePage> {
     return responseBody;
   }
 
+  Future addPost() async {
+    String url = 'https://jsonplaceholder.typicode.com/posts';
+
+    var response = await http.post(
+      Uri.parse(url),
+      body: {
+        'id': '1',
+        'userId': '10',
+        'title': 'Hello world to API :)',
+      },
+    );
+
+    var responseBody = jsonDecode(response.body);
+
+    print(responseBody);
+
+    return responseBody;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +138,13 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             );
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            addPost();
+          },
+          backgroundColor: Colors.blueGrey,
+          child: const Icon(Icons.add),
         ));
   }
 }
